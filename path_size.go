@@ -10,7 +10,7 @@ import (
 )
 
 func GetPathSize(path string, human bool, hidden bool, recurs bool) (string, error) {
-	if hidden==false && strings.HasPrefix(path, ".") {
+	if !hidden && strings.HasPrefix(path, ".") {
 		return "", errors.New("файл не найден")
 	}
 	if path == "" {
@@ -19,12 +19,12 @@ func GetPathSize(path string, human bool, hidden bool, recurs bool) (string, err
 	inf, err := os.Stat(path)
 	var size int64
 	if err != nil {
-		return "", errors.New("Файл не найден")
+		return "", errors.New("файл не найден")
 	}
 	if err == nil && inf.IsDir() {
 		list_files, _ := os.ReadDir(path)
 		for _, v := range list_files {
-		    if (hidden==false) && (strings.HasPrefix(v.Name(),".")){
+		    if !hidden && (strings.HasPrefix(v.Name(),".")){
 			continue
 		    }
 		    if v.IsDir() && recurs {
@@ -56,7 +56,7 @@ func outcomeSize(human bool, size int64) string {
 		case (size>=1073741824) && (size<1099511627776): outcome=fmt.Sprintf("%.1f GB", float32(size)/1073741824)
 		case (size>=1099511627776) && (size<1125899906842624): outcome=fmt.Sprintf("%.1f TB", float32(size)/1099511627776)
 		case (size>=1125899906842624) && (size<1152921504606846976): outcome=fmt.Sprintf("%.1f PB", float32(size)/1125899906842624)
-		case (float64(size)>=1152921504606846976) && (float64(size)<1180591620717411303424): outcome=fmt.Sprintf("%.1 EB", float64(size)/1152921504606846976)
+		case (float64(size)>=1152921504606846976) && (float64(size)<1180591620717411303424): outcome=fmt.Sprintf("%.1f EB", float64(size)/1152921504606846976)
 	
 	}
 	return outcome
